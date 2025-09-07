@@ -2,6 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Patient = require('../models/patient_model');
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Retrieve a list of patients
+ *     responses:
+ *       200:
+ *         description: A list of patients
+ */
 
 router.get('/', async (req, res) => {
     const patients = await Patient.find();

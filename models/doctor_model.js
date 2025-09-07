@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const patientSchema = new mongoose.Schema({
+const doctorSchema = new mongoose.Schema({
     lastName: {
         type: String,
         required: true,
@@ -16,11 +16,15 @@ const patientSchema = new mongoose.Schema({
         required: true,
         minlength: 2,
     },
-    birthYear: {
-        type: Number,
+    speciality: {
+        type: String,
         required: true,
-        min: 1900,
-        max: new Date().getFullYear(),
+        minlength: 2,
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['Молодший спеціаліст', 'Спеціаліст', 'Лікар вищої категорії', 'Доктор медчних наук'],
 
     }
 }, {
@@ -28,8 +32,8 @@ const patientSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-patientSchema.virtual('id').get(function() {
+doctorSchema.virtual('id').get(function() {
     return this._id.toHexString();
 });
 
-module.exports = mongoose.model("Patient", patientSchema);
+module.exports = mongoose.model("Doctor", doctorSchema);
