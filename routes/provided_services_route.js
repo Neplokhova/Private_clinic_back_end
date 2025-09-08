@@ -2,6 +2,32 @@ const express = require("express");
 const router = express.Router();
 const ProvidedService = require("../models/provided_services_model");
 
+/**
+ * @swagger
+ * /report:
+ *   get:
+ *     summary: Get all provided services
+ *     tags: [ProvidedServices]
+ *     responses:
+ *       200:
+ *         description: List of provided services sorted by date descending
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ProvidedService'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Помилка сервера"
+ */
 
 router.get("/", async (req, res) => {
     try {
@@ -13,6 +39,51 @@ router.get("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /report/filter:
+ *   get:
+ *     summary: Filter provided services by date range and category
+ *     tags: [ProvidedServices]
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Start date for filtering (inclusive)
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: End date for filtering (inclusive)
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *           enum: [all, consultation, procedure]
+ *         description: Service category to filter by ("all" for no filter)
+ *     responses:
+ *       200:
+ *         description: List of filtered provided services
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ProvidedService'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Помилка сервера"
+ */
 
 router.get("/filter", async (req, res) => {
     try {

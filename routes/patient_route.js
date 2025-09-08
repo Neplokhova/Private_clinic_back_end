@@ -4,18 +4,51 @@ const Patient = require('../models/patient_model');
 
 /**
  * @swagger
- * /:
+ * /patients:
  *   get:
- *     summary: Retrieve a list of patients
+ *     summary: Get all patients
+ *     tags: [Patients]
  *     responses:
  *       200:
- *         description: A list of patients
+ *         description: List of all patients
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Patient'
  */
 
 router.get('/', async (req, res) => {
     const patients = await Patient.find();
     res.json(patients);
 });
+
+/**
+ * @swagger
+ * /patients/{id}:
+ *   get:
+ *     summary: Get patient by ID
+ *     tags: [Patients]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Patient ID (MongoDB ObjectId)
+ *     responses:
+ *       200:
+ *         description: Patient found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Patient'
+ *       400:
+ *         description: Invalid ID supplied
+ *       404:
+ *         description: Patient not found
+ */
 
 router.get('/:id', async (req, res) => {
     try {
@@ -27,6 +60,29 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /patients:
+ *   post:
+ *     summary: Create a new patient
+ *     tags: [Patients]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Patient'
+ *     responses:
+ *       201:
+ *         description: Patient created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Patient'
+ *       400:
+ *         description: Invalid input
+ */
+
 router.post('/', async (req, res) => {
         try {
             const patient = new Patient(req.body);
@@ -37,6 +93,38 @@ router.post('/', async (req, res) => {
         }
     })
 
+/**
+ * @swagger
+ * /patients/{id}:
+ *   put:
+ *     summary: Update patient by ID
+ *     tags: [Patients]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Patient ID (MongoDB ObjectId)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Patient'
+ *     responses:
+ *       200:
+ *         description: Updated patient
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Patient'
+ *       400:
+ *         description: Invalid request or error during update
+ *       404:
+ *         description: Patient not found
+ */
+
 router.put('/:id', async (req, res) => {
     try {
         const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -45,6 +133,36 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+
+/**
+ * @swagger
+ * /patients/{id}:
+ *   delete:
+ *     summary: Delete patient by ID
+ *     tags: [Patients]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Patient ID (MongoDB ObjectId)
+ *     responses:
+ *       200:
+ *         description: Patient deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Deleted successfully
+ *       400:
+ *         description: Invalid request or error during deletion
+ *       404:
+ *         description: Patient not found
+ */
 
 router.delete('/:id', async (req, res) => {
     try {

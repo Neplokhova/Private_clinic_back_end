@@ -49,9 +49,6 @@ async function createAppointment(req, res) {
         });
 
 
-
-        // newAppointment.price = totalPrice;
-
         await newAppointment.save();
 
         res.status(201).json({ appointment: newAppointment, providedServices: saved });

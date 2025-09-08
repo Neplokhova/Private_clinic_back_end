@@ -10,6 +10,7 @@ const doctorsRouter = require('./routes/doctor_route');
 const servicesRouter = require('./routes/service_route');
 const appointmentsRouter = require('./routes/appointment_route');
 const reportRouter = require('./routes/provided_services_route');
+const authRoutes = require('./routes/auth_route');
 
 const port = 3000;
 
@@ -20,6 +21,7 @@ app.use('/doctors', doctorsRouter);
 app.use('/services', servicesRouter);
 app.use('/appointments', appointmentsRouter);
 app.use('/report', reportRouter);
+app.use('/api/auth', authRoutes);
 
 mongoose.connect('mongodb+srv://db_user:db_password@clusterts.o39dbv9.mongodb.net/Private_clinic?retryWrites=true&w=majority&appName=ClusterTS')
     .then(() => console.log('✅ Connected to MongoDB'))
@@ -39,7 +41,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./routes/*.js'],
+    apis: ['./routes/*.js', "./models/*.js"],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
